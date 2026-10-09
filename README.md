@@ -68,3 +68,9 @@ Add it to your `cline_mcp_settings.json` or configure it via the extension setti
 
 ## 💡 Why use an MCP for ADRs?
 Normally, AI agents manage ADRs by guessing CLI syntax (`adr new "Title"`) inside a terminal, which fails if the tool isn't installed or if the OS doesn't support bash. By using an MCP server, the AI uses structured JSON-RPC API calls that guarantee **100% precision** and require **zero local dependencies** for the end developer.
+
+## 📝 License
+
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0) - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) Carlos Kvasir <gpg@carloskvasir.dev>
