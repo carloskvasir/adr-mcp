@@ -20,33 +20,36 @@ You can also ask things like:
 
 The AI will instantly read all your past ADRs as native resources and answer you immediately, with full context.
 
-## 📦 Quick Installation
+## 📦 Quick Usage (No Installation Required)
 
-1. **Clone this tool** anywhere on your machine:
-   ```bash
-   git clone https://github.com/carloskvasir/adr-mcp.git
-   cd adr-mcp
-   npm install
-   chmod +x index.js
-   ```
+Because this package is distributed via npm, you do not need to clone the repository or manage dependencies manually. It works seamlessly with modern tool managers like `mise`, `asdf`, or standard Node.js.
 
-2. **Connect it to your AI:**
-   Open your AI's configuration file (e.g., `claude_desktop_config.json` for Claude Desktop, or `cline_mcp_settings.json` for VS Code extensions) and add this block:
+Just open your AI's configuration file (e.g., `claude_desktop_config.json` for Claude Desktop, or `cline_mcp_settings.json` for VS Code extensions) and add this block:
 
-   ```json
-   {
-     "mcpServers": {
-       "adr-manager": {
-         "command": "node",
-         "args": [
-           "/absolute/path/to/adr-mcp/index.js",
-           "/absolute/path/to/your/project/folder"
-         ]
-       }
-     }
-   }
-   ```
-   *That's it! Restart your AI client, and it will be ready to manage your architectural decisions.*
+```json
+{
+  "mcpServers": {
+    "adr-manager": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "adr-mcp",
+        "/absolute/path/to/your/project/folder"
+      ]
+    }
+  }
+}
+```
+*That's it! Restart your AI client. The `npx` command will automatically download and execute the MCP server in the background.*
+
+### Local Development / Manual Build
+If you want to contribute or run it from source:
+```bash
+git clone https://github.com/carloskvasir/adr-mcp.git
+cd adr-mcp
+npm install
+npm link
+```
 
 ## 🚀 Advanced Capabilities & Roadmap (Graph Networks)
 

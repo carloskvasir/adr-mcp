@@ -12,5 +12,8 @@
     "@modelcontextprotocol/sdk": "^1.32.1"
   },
   "author": "Carlos Kvasir <gpg@carloskvasir.dev>",
-  "license": "MPL-2.0"
+  "license": "MPL-2.0",
+  "bin": {
+    "adr-mcp": "./index.js"
+  }
 }
