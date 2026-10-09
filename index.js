@@ -67,7 +67,8 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   const uri = request.params.uri;
   if (uri.startsWith("adr:///")) {
-    const filename = uri.replace("adr:///", "");
+    const rawFilename = uri.replace("adr:///", "");
+    const filename = path.basename(rawFilename); // Prevent path traversal
     const filePath = path.join(ADR_DIR, filename);
     try {
       const content = await fs.readFile(filePath, "utf-8");
@@ -136,7 +137,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     const files = await fs.readdir(ADR_DIR);
     const adrFiles = files.filter(f => f.match(/^\d{4}-.*\.md$/));
-    const nextNum = adrFiles.length + 1;
+    
+    // Find the highest existing ADR number to avoid overwriting if intermediate files were deleted
+    const existingNums = adrFiles.map(f => parseInt(f.match(/^\d{4}/)[0], 10));
+    const nextNum = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 1;
+    
     const numStr = nextNum.toString().padStart(4, "0");
     const safeTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const filename = `${numStr}-${safeTitle}.md`;
