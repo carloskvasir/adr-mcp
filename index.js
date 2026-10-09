@@ -114,6 +114,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["title", "context", "decision", "consequences"],
         },
       },
+      {
+        name: "update_adr_status",
+        description: "Updates the status of an existing Architecture Decision Record.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            filename: { type: "string", description: "The filename of the ADR (e.g. '0001-use-postgresql.md')" },
+            status: { type: "string", description: "The new status (e.g. 'Accepted', 'Superseded', 'Deprecated')" },
+          },
+          required: ["filename", "status"],
+        },
+      },
     ],
   };
 });
@@ -170,6 +182,35 @@ ${consequences}
     return {
       content: [{ type: "text", text: `Successfully created ADR: ${filename}\nPath: ${path.join(ADR_DIR, filename)}` }],
     };
+  }
+
+  if (request.params.name === "update_adr_status") {
+    const { filename, status } = request.params.arguments;
+    
+    // Prevent path traversal
+    const safeFilename = path.basename(filename);
+    const filePath = path.join(ADR_DIR, safeFilename);
+
+    try {
+      let content = await fs.readFile(filePath, "utf-8");
+      
+      // Basic regex to find the status section and replace the content until the next section
+      const statusRegex = /(## Status\s*\n)(.+?)(?=\n##|$)/is;
+      
+      if (statusRegex.test(content)) {
+        content = content.replace(statusRegex, `$1${status}\n`);
+      } else {
+        throw new Error("Could not find '## Status' section in the ADR file.");
+      }
+      
+      await fs.writeFile(filePath, content);
+      
+      return {
+        content: [{ type: "text", text: `Successfully updated status of ${safeFilename} to: ${status}` }],
+      };
+    } catch (e) {
+      throw new Error(`Failed to update ADR: ${e.message}`);
+    }
   }
 
   throw new Error("Tool not found");
