@@ -1,73 +1,63 @@
-# ADR MCP Server
+# ADR Manager for AI Assistants
 
-A Model Context Protocol (MCP) server for managing Architecture Decision Records (ADRs). This server allows AI coding assistants (like Claude Desktop, Cursor, Antigravity, and Cline) to natively interact with your project's ADRs without relying on fragile bash commands.
+Welcome! This tool gives your favorite AI assistant (like Claude Desktop, Cursor, or RooCode) the superpower to natively manage your project's Architecture Decision Records (ADRs).
 
-## 🚀 Features
+Normally, setting up and maintaining ADRs requires installing command-line tools and memorizing syntax. With this MCP (Model Context Protocol) server, you just talk to your AI naturally!
 
-### 🛠️ Tools
-- `list_adrs`: Instantly returns a list of all ADRs in the current workspace.
-- `create_adr`: Creates a correctly formatted ADR. It automatically handles numbering, safe file naming, and markdown generation given a `title`, `context`, `decision`, and `consequences`.
+## 🎯 How a Common User Uses This
 
-### 📚 Resources
-- Exposes all ADR files as native resources using the `adr:///` URI scheme (e.g., `adr:///0001-use-mysql.md`).
-- Allows AI agents to read the architectural context instantly, feeding it directly into the prompt without manual `cat` commands.
+Once installed, you don't need to touch the terminal or remember file naming conventions. Just open your AI chat and say:
 
-## 📦 Installation
+> *"Hey, we decided to use PostgreSQL instead of MySQL because of its JSONB support. Please create an ADR for this."*
 
-1. Clone this repository:
+**The AI will automatically:**
+1. Calculate the correct next number (e.g., `0015-use-postgresql.md`).
+2. Format the Markdown file perfectly with the Context, Decision, and Consequences.
+3. Save it directly into your project's `doc/adr` folder.
+
+You can also ask things like:
+> *"What were our past decisions regarding our caching strategy?"*
+
+The AI will instantly read all your past ADRs as native resources and answer you immediately, with full context.
+
+## 📦 Quick Installation
+
+1. **Clone this tool** anywhere on your machine:
    ```bash
    git clone https://github.com/carloskvasir/adr-mcp.git
    cd adr-mcp
-   ```
-2. Install dependencies:
-   ```bash
    npm install
-   ```
-3. Make the script executable:
-   ```bash
    chmod +x index.js
    ```
 
-## ⚙️ Configuration
+2. **Connect it to your AI:**
+   Open your AI's configuration file (e.g., `claude_desktop_config.json` for Claude Desktop, or `cline_mcp_settings.json` for VS Code extensions) and add this block:
 
-To use this MCP server with your AI agent, add it to the agent's MCP configuration file.
+   ```json
+   {
+     "mcpServers": {
+       "adr-manager": {
+         "command": "node",
+         "args": [
+           "/absolute/path/to/adr-mcp/index.js",
+           "/absolute/path/to/your/project/folder"
+         ]
+       }
+     }
+   }
+   ```
+   *That's it! Restart your AI client, and it will be ready to manage your architectural decisions.*
 
-### Claude Desktop
-Edit your `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "adr-manager": {
-      "command": "node",
-      "args": [
-        "/absolute/path/to/adr-mcp/index.js",
-        "/absolute/path/to/your/target/project" 
-      ]
-    }
-  }
-}
-```
+## 🚀 Advanced Capabilities & Roadmap (Graph Networks)
 
-### Cursor / Cline / RooCode
-Add it to your `cline_mcp_settings.json` or configure it via the extension settings:
-```json
-{
-  "mcpServers": {
-    "adr-manager": {
-      "command": "node",
-      "args": [
-        "/absolute/path/to/adr-mcp/index.js",
-        "/absolute/path/to/your/target/project"
-      ]
-    }
-  }
-}
-```
+As a project grows, the relationships between architectural decisions become highly complex (e.g., Decision A *supersedes* Decision B, but *depends on* Decision C). 
 
-> **Note:** The second argument in `args` is the target workspace where your `doc/adr` folder lives. If you omit it, the server will default to the current working directory from where the process was launched.
+Because this tool is built as a robust MCP Server, it can go far beyond simple text files. **In future updates, this MCP can natively orchestrate local Docker containers to run Graph Databases (like RedisGraph or Neo4j) in the background.**
 
-## 💡 Why use an MCP for ADRs?
-Normally, AI agents manage ADRs by guessing CLI syntax (`adr new "Title"`) inside a terminal, which fails if the tool isn't installed or if the OS doesn't support bash. By using an MCP server, the AI uses structured JSON-RPC API calls that guarantee **100% precision** and require **zero local dependencies** for the end developer.
+This advanced architecture will allow the AI to:
+- Map and query complex dependency graphs of your architectural decisions.
+- Perform deep impact analysis (e.g., *"If we deprecate Redis, which other architectural decisions are impacted?"*).
+- Execute all of this transparently, without the end-user needing to manually manage databases or containers.
 
 ## 📝 License
 
