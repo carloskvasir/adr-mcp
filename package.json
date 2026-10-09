@@ -1,6 +1,6 @@
 {
   "name": "adr-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ADR Model Context Protocol (MCP) Server",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,6 @@
   "author": "Carlos Kvasir <gpg@carloskvasir.dev>",
   "license": "MPL-2.0",
   "bin": {
-    "adr-mcp": "./index.js"
+    "adr-mcp": "index.js"
   }
 }
